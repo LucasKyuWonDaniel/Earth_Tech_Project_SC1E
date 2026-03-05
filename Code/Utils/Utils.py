@@ -3,11 +3,14 @@ import pygame
 
 def create_elements(el):
     rect = []
+
+    rect.append({"rect": pygame.Rect(el["water"][0] * 10, el["water"][1] * 10, el["water"][2] * 10, el["water"][3] * 10), "type": "water"})
+
     for i in el["wall"]:
-        rect.append({"rect": pygame.Rect(i[0], i[1], i[2], i[3]), "type": "wall"})
+        rect.append({"rect": pygame.Rect(i[0]*10, i[1]*10, i[2]*10, i[3]*10), "type": "wall"})
 
     for i in el["platform"]:
-        rect.append({"rect": pygame.Rect(i[0], i[1], 200, 20), "type": "platform"})
+        rect.append({"rect": pygame.Rect(i[0]*10, i[1]*10, 120, 20), "type": "platform"})
 
     return rect
 
@@ -15,8 +18,13 @@ def draw_element(screen, element, joueur, en_contact, direction, d_save, anim_in
     pygame.draw.rect(screen, (0, 255, 100), joueur)
     player_animation(screen, en_contact, d_save, joueur, direction, anim_index)
     for p in element:
-        #if p["type"] == "platform":
-            pygame.draw.rect(screen, (200, 200, 200), p["rect"]) # Plateformes
+        if p["type"] == "platform":
+            pygame.draw.rect(screen, (200, 200, 200), p["rect"])
+        elif p["type"] == "water":
+            pygame.draw.rect(screen, (0, 0, 255), p["rect"])
+
+        elif p["type"] == "wall":
+            pygame.draw.rect(screen, (100, 100, 100), p["rect"])
 
 
 def collision(joueur, plateformes, vy, vx, keys):
@@ -24,18 +32,16 @@ def collision(joueur, plateformes, vy, vx, keys):
     for p in plateformes:
         if (joueur.colliderect(p["rect"]) and (p["type"] == "wall" or p["type"] == "platform") ) or (p["rect"].top - 1 <= joueur.bottom <= p["rect"].top + 1 and p["rect"].left <= joueur.right and joueur.left <= p["rect"].right):
             if vy > 0:
-                if not(keys[pygame.K_DOWN] and p["type"] == "platform"):
-                    if (joueur.bottom - vy) <= p["rect"].top:
-                        joueur.bottom = p["rect"].top
-                        vy = 0
-                        en_contact = True
-                    elif joueur.colliderect(p["rect"]):
-                        if vx > 0:
-                            joueur.right = p["rect"].left
-                        elif vx < 0:
-                            joueur.left = p["rect"].right
-                        vx = 0
-
+                if (joueur.bottom - vy) <= p["rect"].top:
+                    joueur.bottom = p["rect"].top
+                    vy = 0
+                    en_contact = True
+                elif joueur.colliderect(p["rect"]):
+                    if vx > 0:
+                        joueur.right = p["rect"].left
+                    elif vx < 0:
+                        joueur.left = p["rect"].right
+                    vx = 0
             elif vy < 0:
                 if joueur.top >= p["rect"].bottom + vy - 1:
                     joueur.top = p["rect"].bottom
@@ -46,6 +52,12 @@ def collision(joueur, plateformes, vy, vx, keys):
                     elif vx < 0:
                         joueur.left = p["rect"].right
                     vx = 0
+            else:
+                if vx > 0:
+                    joueur.right = p["rect"].left
+                elif vx < 0:
+                    joueur.left = p["rect"].right
+                vx = 0
 
     return en_contact, vy, vx
 
@@ -83,7 +95,7 @@ def mouvement(gravite, plateformes, friction, vitesse_max, joueur, acceleration,
 
     # Saut
     if (keys[pygame.K_SPACE] or keys[pygame.K_UP]) and en_contact:
-        vy = -16
+        vy = -14
 
     return vx, vy, en_contact, direction
 

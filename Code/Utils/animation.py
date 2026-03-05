@@ -33,8 +33,8 @@ def player_animation(screen, en_contact, d_save, joueur, direction, anim_index):
             image = pygame.image.load("./Textures/player/player_left_jump.png")
 
     x, y = joueur.x, joueur.y
-    player_image = pygame.transform.scale(image, (40, 40))
-    player_rect = player_image.get_rect(center=(x+20, y+20))
+    player_image = pygame.transform.scale(image, (50, 50))
+    player_rect = player_image.get_rect(center=(x+25, y+25))
     screen.blit(player_image, player_rect)
 
 

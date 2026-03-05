@@ -2,11 +2,10 @@ from Utils.Utils import*
 import pygame
 
 pygame.init()
-MIN_W, MIN_H = 1240, 700
-screen = pygame.display.set_mode((MIN_W, MIN_H), pygame.RESIZABLE)
+screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
 clock = pygame.time.Clock()
 
-joueur = pygame.Rect(100, 100, 40, 40)
+joueur = pygame.Rect(160, 380, 50, 50)
 vy = 0
 vx = 0
 anim_index = 0.0
@@ -18,13 +17,14 @@ vitesse_max = 7
 
 element = {
     "wall" : [
-        [0, 600, 1300, 30],
-        [0, 450, 300, 30]
-
+        [0, 70, 130, 3],
+        [-1, 0, 1, 72],
+        [128, 0, 1, 72],
+        [0, 45, 30, 25]
     ],
+    "water" : [1,42,14,4],
     "platform" : [
-        [150, 350],
-        [450, 250]
+        [89, 60], [45, 60], [67, 50], [60, 21], [107, 24], [48, 41], [25, 34], [6, 23], [33, 14], [78, 31], [96, 41]
     ]
 }
 hitbox = create_elements(element)
@@ -35,15 +35,11 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-        if event.type == pygame.VIDEORESIZE:
-            nouvelle_largeur = max(event.w,MIN_W)
-            nouvelle_hauteur = max(event.h,MIN_H)
-            screen = pygame.display.set_mode((nouvelle_largeur, nouvelle_hauteur), pygame.RESIZABLE)
 
     vx, vy, en_contact, direction = mouvement(gravite, hitbox, friction, vitesse_max, joueur, acceleration, vx, vy)
     if direction != 0:
         d_save = direction
-        anim_index += 0.1
+        anim_index += 0.3
     else:
         anim_index = 0.0
 
