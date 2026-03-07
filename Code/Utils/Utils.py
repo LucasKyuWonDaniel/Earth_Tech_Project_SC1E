@@ -33,6 +33,8 @@ def create_element(element): # element = "player" : [[160, 380, 50, 50]], "wall"
 
     return rect
 
+# Fonction gérer l'interaction avec la touche E
+
 def interagir(events, joueur_rect, objets_interactifs):
     touche_e_pressee = False
     for event in events:
