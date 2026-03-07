@@ -1,45 +1,43 @@
-from .animation import *
+from .classes import *
 import pygame
-# Fonction pour faire apparaître les plateformes sur l'écran
 
-def draw_element(screen, element, classe, bg = '0'): # element = [{'rect': <rect(0, 700, 1300, 30)>, 'type': 'wall'}, {'rect': <rect(-10, 0, 10, 720)>, 'type': 'wall'}]
-    if bg != '0':
-        screen.blit(bg, (0, 0))
-    else:
-        screen.fill((30, 30, 30))
-
+# fonction pour faire apparaitre les element (platforme, boutton, fond, etc ...)
+def draw_element(screen, element): # element -> list d'objet de la class ObjetClass
+    screen.fill((30, 30, 30))
     for el in element:
-        if el["type"] == "platform":
-            screen.blit(classe.platform_img, el["rect"].topleft)
-            #pygame.draw.rect(screen, (200, 200, 200), el["rect"])
-        elif el["type"] == "water":
-            pygame.draw.rect(screen, (0, 0, 255), el["rect"])
-        elif el["type"] == "wall":
-            pygame.draw.rect(screen, (100, 100, 100), el["rect"])
-        elif el["type"] == "player":
-            pygame.draw.rect(screen, (0, 255, 100), el["rect"])
-            player_animation(classe)
+        if el.visible:
+            if el.type == "background":
+                if len(el.frame) > 0:
+                    screen.blit(el.frame[0], (0, 0))
+            elif len(el.frame) == 0:
+                pygame.draw.rect(screen, el.color, el.rect)
+            elif len(el.frame) == 1:
+                screen.blit(el.frame[0], el.rect.topleft)
+            else:
+                screen.blit(el.frame[int(el.anim_index) % len(el.frame)], el.rect.topleft)
+                el.anim_index += el.anim_speed
 
-# Fonction pour ajouter a la liste des éléments le joueur et les plateformes
-
-def create_element(element): # element = "player" : [[160, 380, 50, 50]], "wall" : [[0, 70, 140, 3], [-1, 0, 1, 72]]
+# fonction qui cree une list d'element de la class ObjetClass et qui les renvoie dans une list
+def create_element(element, niveau = 0, bg = '0'): # element = {"water" : [[160, 380, 50, 50]], "wall" : [[0, 70, 140, 3], [-1, 0, 1, 72]]}
     rect = []
+
+    rect.append(ObjetClass('', 'background'))
+    if bg != '0':
+        rect[0].frame = [pygame.transform.scale(pygame.image.load("./Textures/" + bg).convert(), (1280, 720))]
+
     for key, val in element.items():
         for i in val:
-            if key != 'platform':
-                rect.append({"rect": pygame.Rect(i[0]*10, i[1]*10, i[2]*10, i[3]*10), "type": key})
-            else:
-                rect.append({"rect": pygame.Rect(i[0]*10, i[1]*10, 120, 20), "type": "platform"})
+            rect.append(ObjetClass(pygame.Rect(i[0]*10, i[1]*10, i[2]*10, i[3]*10), key))
+
+            if key == "platform":
+                if niveau == 1:
+                    p_img = 'ciel_platform.png'
+                else:
+                    p_img = 'forest_platform.png'
+                rect[-1].frame = [pygame.transform.scale(pygame.image.load("./Textures/maps/" + p_img).convert_alpha(),(120, 20))]
+            elif key == "water":
+                rect[-1].color = (0, 0, 255)
 
     return rect
 
-# Fonction gérer l'interaction avec la touche E
 
-def interagir(events, joueur_rect, objets_interactifs):
-    touche_e_pressee = False
-    for event in events:
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_e:
-            touche_e_pressee = True 
-            break
-    if not touche_e_pressee:
-        return 0

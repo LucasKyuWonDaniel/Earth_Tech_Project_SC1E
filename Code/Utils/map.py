@@ -1,32 +1,42 @@
 from .Utils import*
+from .classes import*
 
+# fontion pour gerer les colisions avec les objets
 def collision(map, p):
-    if (map.joueur.colliderect(p["rect"]) and (p["type"] == "wall" or p["type"] == "platform")) or (p["rect"].top - 1 <= map.joueur.bottom <= p["rect"].top + 1 and p["rect"].left <= map.joueur.right and map.joueur.left <= p["rect"].right):
-        if map.vy > 0 and (map.joueur.bottom - map.vy) <= p["rect"].top:
-            map.joueur.bottom = p["rect"].top
+    if (map.joueur.rect.colliderect(p.rect) and (p.type == "wall" or p.type == "platform")) or (p.rect.top - 1 <= map.joueur.rect.bottom <= p.rect.top + 1 and p.rect.left <= map.joueur.rect.right and map.joueur.rect.left <= p.rect.right):
+        #vertical
+        if map.vy > 0 and (map.joueur.rect.bottom - map.vy) <= p.rect.top:
+            map.joueur.rect.bottom = p.rect.top
             map.vy = 0
             map.en_contact = True
-        elif map.vy < 0 and map.joueur.top >= p["rect"].bottom + map.vy - 1:
-            map.joueur.top = p["rect"].bottom
+        elif map.vy < 0 and map.joueur.rect.top >= p.rect.bottom + map.vy - 1:
+            map.joueur.rect.top = p.rect.bottom
             map.vy = 0
 
-        elif map.joueur.left < p["rect"].right and (abs(map.joueur.left - p["rect"].right) < 15):
-            map.joueur.left = p["rect"].right
-        elif map.joueur.right > p["rect"].left and (abs(map.joueur.right - p["rect"].left) < 15):
-             map.joueur.right = p["rect"].left
+        # horizontal
+        elif map.joueur.rect.left < p.rect.right and (abs(map.joueur.rect.left - p.rect.right) < 15):
+            map.joueur.rect.left = p.rect.right
+        elif map.joueur.rect.right > p.rect.left and (abs(map.joueur.rect.right - p.rect.left) < 15):
+             map.joueur.rect.right = p.rect.left
 
+# Fonction pour gérer les interaction/utilisation avec la touche E
+def utilisation(map, p):
+    if map.joueur.rect.colliderect(p.rect) and p.type == "water" and map.niveau != 3 and map.water < 100:
+        map.water += 1
+
+# Fonction qui rassemble la gest des colision et les interaction pour eviter des boucle similaire
 def interaction(map):
     map.en_contact = False
-    for p in map.hitbox:
+    for p in map.element[1:]:
         collision(map, p)
+        if map.keys[pygame.K_e]:
+            utilisation(map, p)
 
-        if map.joueur.colliderect(p["rect"]) and p["type"] == "water" and map.keys[pygame.K_e]:
-            print("water !")
-
+# fonction pour gerer touts les mouvements du joueur
 def mouvement(map):
     # changement de coordoné
-    map.joueur.y += map.vy
-    map.joueur.x += map.vx
+    map.joueur.rect.y += map.vy
+    map.joueur.rect.x += map.vx
 
     # Mouvement horizontal
     map.direction = 0
@@ -50,10 +60,12 @@ def mouvement(map):
 
     # Physique verticale
     map.vy += map.gravite
+
     # Saut
     if (map.keys[pygame.K_SPACE] or map.keys[pygame.K_UP]) and map.en_contact:
         map.vy = -14
 
+# fonction qui permet de faire tourner la map
 def run_map(map):
     map.keys = pygame.key.get_pressed()
 
@@ -62,45 +74,44 @@ def run_map(map):
 
     if map.direction != 0:
         map.d_save = map.direction
-        map.anim_index += 0.3
     else:
-        map.anim_index = 0.0
+        map.joueur.anim_index = 0.0
 
-    draw_element(map.screen, map.hitbox+[{"rect":map.joueur, "type":"player"}], map, map.bg_img)
+    map.joueur.frame = map.player_img[map.d_save][map.en_contact]
+    draw_element(map.screen, map.element + [map.joueur])
 
 
-def init_map(map, niveau):
+
+# fonction pour initialiser la map
+def init_map(niveau, element, screen):
+    joueur = ObjetClass(pygame.Rect(160, 380, 50, 50), "player")
+    map = MapClass(0.7, 7, 0.8, 0.8, screen, joueur)
     map.vx = 0
     map.vy = 0
     map.direction = 0
     map.d_save = 1
-    map.hitbox = create_element(map.element)
     map.niveau = niveau
-
     if niveau == 1:
-        p_img = 'ciel_platform.png'
-        bg_img = 'ciel_background.png'
+        map.element = create_element(element, niveau, "maps/ciel_background.png")
     else:
-        p_img = 'forest_platform.png'
-        bg_img = 'forest_background.png'
-    map.platform_img = pygame.transform.scale(pygame.image.load("./Textures/maps/" + p_img).convert_alpha(), (120, 20))
-    map.bg_img = pygame.transform.scale(pygame.image.load("./Textures/maps/" + bg_img).convert(), (1280, 720))
+        map.element = create_element(element, niveau, "maps/forest_background.png")
 
-
-    map.player_image["player_right"] = [
-        pygame.transform.scale(pygame.image.load("./Textures/player/player_right_jump.png"), (50, 50)),
+    map.joueur.anim_speed = 0.2
+    map.player_img[1][True] = [
         pygame.transform.scale(pygame.image.load("./Textures/player/player_right_1.png"), (50, 50)),
         pygame.transform.scale(pygame.image.load("./Textures/player/player_right_2.png"), (50, 50)),
         pygame.transform.scale(pygame.image.load("./Textures/player/player_right_3.png"), (50, 50)),
         pygame.transform.scale(pygame.image.load("./Textures/player/player_right_4.png"), (50, 50))
     ]
-
-    map.player_image["player_left"] = [
-        pygame.transform.scale(pygame.image.load("./Textures/player/player_left_jump.png"), (50, 50)),
+    map.player_img[-1][True] = [
         pygame.transform.scale(pygame.image.load("./Textures/player/player_left_1.png"), (50, 50)),
         pygame.transform.scale(pygame.image.load("./Textures/player/player_left_2.png"), (50, 50)),
         pygame.transform.scale(pygame.image.load("./Textures/player/player_left_3.png"), (50, 50)),
         pygame.transform.scale(pygame.image.load("./Textures/player/player_left_4.png"), (50, 50))
     ]
 
+    map.player_img[1][False] = [pygame.transform.scale(pygame.image.load("./Textures/player/player_right_jump.png"), (50, 50))]
+    map.player_img[-1][False] = [pygame.transform.scale(pygame.image.load("./Textures/player/player_left_jump.png"), (50, 50))]
 
+
+    return map

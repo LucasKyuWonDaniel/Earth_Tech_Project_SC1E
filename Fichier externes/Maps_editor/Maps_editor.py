@@ -26,8 +26,10 @@ def create_elements(el):
 def draw_element(screen, element, joueur, en_contact, direction, d_save, anim_index):
     pygame.draw.rect(screen, (0, 255, 100), joueur)
     for p in element:
-        #if p["type"] == "platform":
+        if p["type"] == "platform":
             pygame.draw.rect(screen, (200, 200, 200), p["rect"])
+        else:
+            pygame.draw.rect(screen, (100, 100, 100, 0), p["rect"])
 
 def collision(joueur, plateformes, vy, vx, keys):
     en_contact = False
@@ -170,7 +172,7 @@ while run:
 
     if keys[pygame.K_z] and len(delete) > 0 and not(press_del):
         hitbox.append({'rect': pygame.Rect(delete[-1][0] * 10, delete[-1][1] * 10, 120, 20), 'type': 'platform'})
-        element["platform"].append([delete[-1][0], delete[-1][1]])
+        element["platform"].append([delete[-1][0], delete[-1][1], 12, 2])
         delete.pop(-1)
         press_del = True
     elif not(keys[pygame.K_z]) and press_del:
