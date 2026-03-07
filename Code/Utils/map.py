@@ -22,7 +22,16 @@ def collision(map, p):
 # Fonction pour gérer les interaction/utilisation avec la touche E
 def utilisation(map, p):
     if map.joueur.rect.colliderect(p.rect) and p.type == "water" and map.niveau != 3 and map.water < 100:
-        map.water += 1
+        map.water += 2
+        if map.water > 100:
+            map.water = 100
+        h = 120 * (map.water/100)
+        map.water_tank.rect.height = h
+        map.water_tank.rect.y = 660 - h
+
+    # utilisation_lvl_1(map)
+    # utilisation_lvl_2(map)
+    # utilisation_lvl_4(map)
 
 # Fonction qui rassemble la gest des colision et les interaction pour eviter des boucle similaire
 def interaction(map):
@@ -66,7 +75,7 @@ def mouvement(map):
         map.vy = -14
 
 # fonction qui permet de faire tourner la map
-def run_map(map):
+def run_map(map, lvl_element = []):
     map.keys = pygame.key.get_pressed()
 
     mouvement(map)
@@ -78,7 +87,7 @@ def run_map(map):
         map.joueur.anim_index = 0.0
 
     map.joueur.frame = map.player_img[map.d_save][map.en_contact]
-    draw_element(map.screen, map.element + [map.joueur])
+    draw_element(map.screen, map.element + [map.joueur, map.water_tank] + lvl_element)
 
 
 
@@ -113,5 +122,9 @@ def init_map(niveau, element, screen):
     map.player_img[1][False] = [pygame.transform.scale(pygame.image.load("./Textures/player/player_right_jump.png"), (50, 50))]
     map.player_img[-1][False] = [pygame.transform.scale(pygame.image.load("./Textures/player/player_left_jump.png"), (50, 50))]
 
+    map.water_tank = ObjetClass(pygame.Rect(100, 540, 90, 0), "water_tank")
+    map.water_tank.color = (50, 150, 255)
+    if niveau == 3:
+        map.water_tank.visible = False
 
     return map

@@ -17,6 +17,7 @@ class MapClass:
         self.niveau = 0
         self.player_img = {1: {True : [], False : []},-1:{True : [], False : []}}
         self.water = 0
+        self.water_tank = ''
 
 # Class pour cree des element, avec ou sans animation, qui vont etre ou pas, afficher a l'ecran
 class ObjetClass:
