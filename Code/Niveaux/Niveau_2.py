@@ -6,20 +6,9 @@ from random import randint, random, uniform
 # permet de cree les objet fire
 def create_fire(map, x, y):
     anim_speed = uniform(0.16,0.22)
-    frame = [
-        pygame.transform.scale(pygame.image.load("./Textures/maps/fire_1.png").convert_alpha(), (30, 35)),
-        pygame.transform.scale(pygame.image.load("./Textures/maps/fire_2.png").convert_alpha(), (30, 35)),
-        pygame.transform.scale(pygame.image.load("./Textures/maps/fire_3.png").convert_alpha(), (30, 35)),
-        pygame.transform.scale(pygame.image.load("./Textures/maps/fire_4.png").convert_alpha(), (30, 35)),
-        pygame.transform.scale(pygame.image.load("./Textures/maps/fire_5.png").convert_alpha(), (30, 35)),
-        pygame.transform.scale(pygame.image.load("./Textures/maps/fire_6.png").convert_alpha(), (30, 35)),
-        pygame.transform.scale(pygame.image.load("./Textures/maps/fire_7.png").convert_alpha(), (30, 35)),
-        pygame.transform.scale(pygame.image.load("./Textures/maps/fire_8.png").convert_alpha(), (30, 35)),
-        pygame.transform.scale(pygame.image.load("./Textures/maps/fire_9.png").convert_alpha(), (30, 35)),
-        pygame.transform.scale(pygame.image.load("./Textures/maps/fire_10.png").convert_alpha(), (30, 35))
-
-    ]
-
+    frame = []
+    for i in range(1,11):
+        frame.append(pygame.transform.scale(pygame.image.load("./Textures/maps/fire_"+str(i)+".png").convert_alpha(), (30, 35)))
 
     fire = ObjetClass(pygame.Rect(x * 10, y * 10, 30, 35), "fire")
     fire.frame = frame
