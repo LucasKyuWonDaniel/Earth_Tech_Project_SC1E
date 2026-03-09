@@ -36,7 +36,7 @@ def utilisation(map, e):
             utilisation_lvl_1(map, e)
         elif map.niveau == 2:
             utilisation_lvl_2(map, e)
-        elif map.niveau == 3:  # Ajout du niveau 3
+        elif map.niveau == 3:
             utilisation_lvl_3(map, e)
         # utilisation_lvl_4(map)
 
@@ -108,11 +108,10 @@ def run_map(map):
         generation_fire(map)
         gestion_score_bare(map, (map.score * 100)/15)
     elif map.niveau == 3:
-        animer_flamme(map, 0.5)
-        animer_fumee(map)
-        update_timer_lvl_3(map)
-        if map.score_max > 0:
-            gestion_score_bare(map, (map.score * 100)/map.score_max)
+        etat = update_lvl_3(map)
+        gestion_score_bare(map, (map.score * 100) / map.score_max)
+        
+
 
 
 
