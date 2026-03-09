@@ -14,10 +14,17 @@ class MapClass:
         self.element = []
         self.joueur = joueur
         self.en_contact = False
+        self.interaction = False
         self.niveau = 0
         self.player_img = {1: {True : [], False : []},-1:{True : [], False : []}}
         self.water = 0
         self.water_tank = ''
+        self.score = 0
+        self.score_bare = ''
+        self.seed = False
+        self.oiseau = []
+        self.fire = []
+        self.press_e = False
 
 # Class pour cree des element, avec ou sans animation, qui vont etre ou pas, afficher a l'ecran
 class ObjetClass:
@@ -29,3 +36,4 @@ class ObjetClass:
         self.anim_speed = 0
         self.visible = True
         self.color = (100, 100, 100)
+        self.variable = 0

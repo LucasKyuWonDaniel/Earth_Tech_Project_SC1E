@@ -1,9 +1,13 @@
+from Code.Niveaux.Niveau_1 import*
+from Code.Niveaux.Niveau_2 import*
 from .Utils import*
 from .classes import*
 
+
+
 # fontion pour gerer les colisions avec les objets
 def collision(map, p):
-    if (map.joueur.rect.colliderect(p.rect) and (p.type == "wall" or p.type == "platform")) or (p.rect.top - 1 <= map.joueur.rect.bottom <= p.rect.top + 1 and p.rect.left <= map.joueur.rect.right and map.joueur.rect.left <= p.rect.right):
+    if (map.joueur.rect.colliderect(p.rect)  or (p.rect.top - 1 <= map.joueur.rect.bottom <= p.rect.top + 1 and p.rect.left <= map.joueur.rect.right and map.joueur.rect.left <= p.rect.right)) and (p.type == "wall" or p.type == "platform"):
         #vertical
         if map.vy > 0 and (map.joueur.rect.bottom - map.vy) <= p.rect.top:
             map.joueur.rect.bottom = p.rect.top
@@ -20,26 +24,26 @@ def collision(map, p):
              map.joueur.rect.right = p.rect.left
 
 # Fonction pour gérer les interaction/utilisation avec la touche E
-def utilisation(map, p):
-    if map.joueur.rect.colliderect(p.rect) and p.type == "water" and map.niveau != 3 and map.water < 100:
-        map.water += 2
-        if map.water > 100:
-            map.water = 100
-        h = 120 * (map.water/100)
-        map.water_tank.rect.height = h
-        map.water_tank.rect.y = 660 - h
+def utilisation(map, e):
+    if map.joueur.rect.colliderect(e.rect):
+        if e.type == "water" and map.niveau != 3 and map.water < 100:
+            gestion_eau(map, 2)
 
-    # utilisation_lvl_1(map)
-    # utilisation_lvl_2(map)
-    # utilisation_lvl_4(map)
+        if map.niveau == 1:
+            utilisation_lvl_1(map, e)
+        elif map.niveau == 2:
+            utilisation_lvl_2(map, e)
+        # utilisation_lvl_3(map)
+        # utilisation_lvl_4(map)
+
 
 # Fonction qui rassemble la gest des colision et les interaction pour eviter des boucle similaire
 def interaction(map):
     map.en_contact = False
-    for p in map.element[1:]:
-        collision(map, p)
+    for e in map.element[1:] + map.oiseau + map.fire:
+        collision(map, e)
         if map.keys[pygame.K_e]:
-            utilisation(map, p)
+            utilisation(map, e)
 
 # fonction pour gerer touts les mouvements du joueur
 def mouvement(map):
@@ -75,7 +79,7 @@ def mouvement(map):
         map.vy = -14
 
 # fonction qui permet de faire tourner la map
-def run_map(map, lvl_element = []):
+def run_map(map):
     map.keys = pygame.key.get_pressed()
 
     mouvement(map)
@@ -87,7 +91,18 @@ def run_map(map, lvl_element = []):
         map.joueur.anim_index = 0.0
 
     map.joueur.frame = map.player_img[map.d_save][map.en_contact]
-    draw_element(map.screen, map.element + [map.joueur, map.water_tank] + lvl_element)
+    draw_element(map.screen, map.element + map.oiseau + map.fire + [map.water_tank, map.score_bare, map.joueur])
+
+    if map.keys[pygame.K_e]:
+        map.press_e = True
+    else:
+        map.press_e = False
+
+    if map.niveau == 1:
+        avancer_oiseau(map, 2)
+    elif map.niveau == 2:
+        generation_fire(map)
+        gestion_score_bare(map, (map.score * 100)/15)
 
 
 
@@ -124,7 +139,21 @@ def init_map(niveau, element, screen):
 
     map.water_tank = ObjetClass(pygame.Rect(100, 540, 90, 0), "water_tank")
     map.water_tank.color = (50, 150, 255)
+
+    map.score_bare = ObjetClass(pygame.Rect(10, 10, 0, 25), "score_bare")
+    map.score_bare.color = (0, 0, 0)
     if niveau == 3:
         map.water_tank.visible = False
+    elif niveau == 4 or niveau == 1:
+        map.score_bare.visible = False
+
+    if niveau == 1:
+        init_lvl_1(map)
+    elif niveau == 2:
+        init_lvl_2(map)
+    elif niveau == 3:
+        init_lvl_1(map)
+    elif niveau == 4:
+        init_lvl_1(map)
 
     return map

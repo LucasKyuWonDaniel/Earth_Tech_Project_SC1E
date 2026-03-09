@@ -35,9 +35,54 @@ def create_element(element, niveau = 0, bg = '0'): # element = {"water" : [[160,
                 else:
                     p_img = 'forest_platform.png'
                 rect[-1].frame = [pygame.transform.scale(pygame.image.load("./Textures/maps/" + p_img).convert_alpha(),(120, 20))]
+
+            elif key == "dirt_pile":
+                rect[-1].frame = [pygame.transform.scale(pygame.image.load("./Textures/maps/tas_terre.png").convert_alpha(),(30, 20)),
+                                  pygame.transform.scale(pygame.image.load("./Textures/maps/tas_terre.png").convert_alpha(),(30, 30)),
+                                  pygame.transform.scale(pygame.image.load("./Textures/maps/tas_terre_plant.png").convert_alpha(),(30, 40))]
+
             elif key == "water":
                 rect[-1].color = (0, 0, 255)
 
     return rect
 
 
+def element_map_general():
+    # Initialisation de la position de chaque elements de la map
+    element = {
+        "wall": [
+            [0, 70, 140, 3],
+            [-1, 0, 1, 72],
+            [128, 0, 1, 72],
+            [0, 45, 30, 25]
+        ],
+        "water": [[1, 43, 14, 4]],
+        "platform": [
+            [89, 60, 12, 2],
+            [45, 60, 12, 2],
+            [67, 50, 12, 2],
+            [60, 21, 12, 2],
+            [107, 24, 12, 2],
+            [48, 41, 12, 2],
+            [25, 34, 12, 2],
+            [6, 23, 12, 2],
+            [33, 14, 12, 2],
+            [78, 31, 12, 2],
+            [96, 41, 12, 2]
+        ],
+    }
+    return element
+
+# fonction gerer le niveau d'eau
+def gestion_eau(map, value):
+    map.water += value
+    if map.water > 100:
+        map.water = 100
+    elif map.water < 0:
+        map.water = 0
+    h = 120 * (map.water / 100)
+    map.water_tank.rect.height = h
+    map.water_tank.rect.y = 660 - h
+
+def gestion_score_bare(map, value): # value en %
+    map.score_bare.rect.width = 200 * (value / 100)
