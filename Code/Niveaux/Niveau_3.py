@@ -1,7 +1,7 @@
 import pygame
 import random
-from Utils.Utils import init_map, run_map
-from Utils.classes import ObjetClass
+from ..Utils.Utils import init_map, run_map
+from ..Utils.classes import ObjetClass
 
 class Niveau_3:
     def __init__(self, screen):

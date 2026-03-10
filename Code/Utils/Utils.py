@@ -23,7 +23,7 @@ def create_element(element, niveau = 0, bg = '0'): # element = {"water" : [[160,
 
     rect.append(ObjetClass('', 'background'))
     if bg != '0':
-        rect[0].frame = [pygame.transform.scale(pygame.image.load("./Textures/" + bg).convert(), (1280, 720))]
+        rect[0].frame = [pygame.transform.scale(pygame.image.load("./Asset/" + bg).convert(), (1280, 720))]
 
     for key, val in element.items():
         for i in val:
@@ -34,12 +34,12 @@ def create_element(element, niveau = 0, bg = '0'): # element = {"water" : [[160,
                     p_img = 'ciel_platform.png'
                 else:
                     p_img = 'forest_platform.png'
-                rect[-1].frame = [pygame.transform.scale(pygame.image.load("./Textures/maps/" + p_img).convert_alpha(),(120, 20))]
+                rect[-1].frame = [pygame.transform.scale(pygame.image.load("./Asset/maps/" + p_img).convert_alpha(),(120, 20))]
 
             elif key == "dirt_pile":
-                rect[-1].frame = [pygame.transform.scale(pygame.image.load("./Textures/maps/tas_terre.png").convert_alpha(),(30, 20)),
-                                  pygame.transform.scale(pygame.image.load("./Textures/maps/tas_terre.png").convert_alpha(),(30, 30)),
-                                  pygame.transform.scale(pygame.image.load("./Textures/maps/tas_terre_plant.png").convert_alpha(),(30, 40))]
+                rect[-1].frame = [pygame.transform.scale(pygame.image.load("./Asset/maps/tas_terre.png").convert_alpha(),(30, 20)),
+                                  pygame.transform.scale(pygame.image.load("./Asset/maps/tas_terre.png").convert_alpha(),(30, 30)),
+                                  pygame.transform.scale(pygame.image.load("./Asset/maps/tas_terre_plant.png").convert_alpha(),(30, 40))]
 
             elif key == "water":
                 rect[-1].color = (0, 0, 255)

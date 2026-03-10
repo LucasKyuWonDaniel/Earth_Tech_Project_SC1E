@@ -7,7 +7,7 @@ from .classes import*
 
 # fontion pour gerer les colisions avec les objets
 def collision(map, p):
-    if (map.joueur.rect.colliderect(p.rect)  or (p.rect.top - 1 <= map.joueur.rect.bottom <= p.rect.top + 1 and p.rect.left <= map.joueur.rect.right and map.joueur.rect.left <= p.rect.right)) and (p.type == "wall" or p.type == "platform"):
+    if (map.joueur.rect.colliderect(p.rect) or (p.rect.top - 1 <= map.joueur.rect.bottom <= p.rect.top + 1 and p.rect.left <= map.joueur.rect.right and map.joueur.rect.left <= p.rect.right)) and (p.type == "wall" or p.type == "platform"):
         #vertical
         if map.vy > 0 and (map.joueur.rect.bottom - map.vy) <= p.rect.top:
             map.joueur.rect.bottom = p.rect.top
@@ -122,20 +122,20 @@ def init_map(niveau, element, screen):
 
     map.joueur.anim_speed = 0.2
     map.player_img[1][True] = [
-        pygame.transform.scale(pygame.image.load("./Textures/player/player_right_1.png"), (50, 50)),
-        pygame.transform.scale(pygame.image.load("./Textures/player/player_right_2.png"), (50, 50)),
-        pygame.transform.scale(pygame.image.load("./Textures/player/player_right_3.png"), (50, 50)),
-        pygame.transform.scale(pygame.image.load("./Textures/player/player_right_4.png"), (50, 50))
+        pygame.transform.scale(pygame.image.load("./Asset/player/player_right_1.png"), (50, 50)),
+        pygame.transform.scale(pygame.image.load("./Asset/player/player_right_2.png"), (50, 50)),
+        pygame.transform.scale(pygame.image.load("./Asset/player/player_right_3.png"), (50, 50)),
+        pygame.transform.scale(pygame.image.load("./Asset/player/player_right_4.png"), (50, 50))
     ]
     map.player_img[-1][True] = [
-        pygame.transform.scale(pygame.image.load("./Textures/player/player_left_1.png"), (50, 50)),
-        pygame.transform.scale(pygame.image.load("./Textures/player/player_left_2.png"), (50, 50)),
-        pygame.transform.scale(pygame.image.load("./Textures/player/player_left_3.png"), (50, 50)),
-        pygame.transform.scale(pygame.image.load("./Textures/player/player_left_4.png"), (50, 50))
+        pygame.transform.scale(pygame.image.load("./Asset/player/player_left_1.png"), (50, 50)),
+        pygame.transform.scale(pygame.image.load("./Asset/player/player_left_2.png"), (50, 50)),
+        pygame.transform.scale(pygame.image.load("./Asset/player/player_left_3.png"), (50, 50)),
+        pygame.transform.scale(pygame.image.load("./Asset/player/player_left_4.png"), (50, 50))
     ]
 
-    map.player_img[1][False] = [pygame.transform.scale(pygame.image.load("./Textures/player/player_right_jump.png"), (50, 50))]
-    map.player_img[-1][False] = [pygame.transform.scale(pygame.image.load("./Textures/player/player_left_jump.png"), (50, 50))]
+    map.player_img[1][False] = [pygame.transform.scale(pygame.image.load("./Asset/player/player_right_jump.png"), (50, 50))]
+    map.player_img[-1][False] = [pygame.transform.scale(pygame.image.load("./Asset/player/player_left_jump.png"), (50, 50))]
 
     map.water_tank = ObjetClass(pygame.Rect(100, 540, 90, 0), "water_tank")
     map.water_tank.color = (50, 150, 255)

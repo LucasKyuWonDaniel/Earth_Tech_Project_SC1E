@@ -8,7 +8,7 @@ def create_fire(map, x, y):
     anim_speed = uniform(0.16,0.22)
     frame = []
     for i in range(1,11):
-        frame.append(pygame.transform.scale(pygame.image.load("./Textures/maps/fire_"+str(i)+".png").convert_alpha(), (30, 35)))
+        frame.append(pygame.transform.scale(pygame.image.load("./Asset/maps/fire_"+str(i)+".png").convert_alpha(), (30, 35)))
 
     fire = ObjetClass(pygame.Rect(x * 10, y * 10, 30, 35), "fire")
     fire.frame = frame

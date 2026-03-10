@@ -2,7 +2,7 @@ import pygame
 import math
 from Code.Utils.Utils import *
 
-# interaction sppecifique au niveau 1
+# interaction specifique au niveau 1
 def utilisation_lvl_1(map, e):
     if e.type == "dirt_pile":
         # permet de mettre de l'eau sur une graine
