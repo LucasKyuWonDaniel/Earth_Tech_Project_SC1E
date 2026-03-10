@@ -25,6 +25,15 @@ class MapClass:
         self.oiseau = []
         self.fire = []
         self.press_e = False
+        self.dechets = []
+        self.poubelles = []
+        self.dechet_transporte = None
+        self.pollution = 0
+        self.timer_apparition = 0
+        self.intervalle_apparition = 120
+        self.types_dechets = []
+        self.couleurs_dechets = {}
+
 
 # Class pour cree des element, avec ou sans animation, qui vont etre ou pas, afficher a l'ecran
 class ObjetClass:
@@ -37,3 +46,4 @@ class ObjetClass:
         self.visible = True
         self.color = (100, 100, 100)
         self.variable = 0
+        self.type_dechet = ""
