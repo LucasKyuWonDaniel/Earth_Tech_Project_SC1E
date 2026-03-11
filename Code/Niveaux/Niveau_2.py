@@ -30,7 +30,7 @@ def utilisation_lvl_2(map, e):
 def generation_fire(map):
     if len(map.fire) <= 1:
         nb_fire = 1
-    elif random() > 0.993:
+    elif aleatoire(map.aleatoire):
         nb_fire = 1
     else:
         nb_fire = 0
@@ -56,4 +56,7 @@ def init_lvl_2(map):
     create_fire(map, 111, 18)
     create_fire(map, 94, 55)
     create_fire(map, 38, 10)
+    map.aleatoire.s = 1.5
+    map.aleatoire.min = 1
+    map.aleatoire.max = 2
     map.score = 3

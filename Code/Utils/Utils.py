@@ -1,7 +1,8 @@
 from .classes import *
 import pygame
+from random import random
 
-# fonction pour faire apparaitre les element (platforme, boutton, fond, etc ...)
+# fonction pour faire apparaitre les element de la map (platforme, fond, etc ...)
 def draw_element(screen, element): # element -> list d'objet de la class ObjetClass
     screen.fill((30, 30, 30))
     for el in element:
@@ -84,5 +85,60 @@ def gestion_eau(map, value):
     map.water_tank.rect.height = h
     map.water_tank.rect.y = 660 - h
 
+# fonction qui gere la taille de la barre
 def gestion_score_bare(map, value): # value en %
     map.score_bare.rect.width = 200 * (value / 100)
+
+# fonction qui gere l'aleatoire
+def aleatoire(a):
+    if a.time/60 > a.max:
+        a.time = 0
+        return True
+    elif a.time/60 > a.min and random() < (a.nb_s / 60):
+        a.time = 0
+        return True
+    return False
+
+# fonction qui dessine les bouttons
+def draw_botton(screen, element, click, niveau, continue_click):
+    mouse = pygame.mouse.get_pos()
+    for botton in element:
+        is_hover = botton.rect.collidepoint(mouse)
+        if is_hover:
+            if click and not continue_click  and botton.action != None:
+                niveau = botton.action
+            col = botton.hover
+        else:
+            col = botton.color
+
+        if ".png" in botton.text:
+            # Charger l'image
+            if is_hover and type(botton.hover) == str:
+                img = pygame.image.load(botton.hover).convert_alpha()
+            else:
+                img = pygame.image.load(botton.text).convert_alpha()
+            img = pygame.transform.smoothscale(img, (botton.rect.width, botton.rect.height))
+
+            # Surface avec alpha
+            rounded = pygame.Surface((botton.rect.width, botton.rect.height), pygame.SRCALPHA)
+
+            # Dessiner un rectangle arrondi blanc (servira de masque)
+            pygame.draw.rect(
+                rounded,
+                (255, 255, 255),
+                rounded.get_rect(),
+                border_radius=botton.border_r
+            )
+
+            # Appliquer le masque : on copie l'image dans la surface arrondie
+            rounded.blit(img, (0, 0), special_flags=pygame.BLEND_RGBA_MIN)
+
+            # Afficher
+            screen.blit(rounded, botton.rect)
+
+        else:
+            if col != None:
+                pygame.draw.rect(screen, col, botton.rect, border_radius=botton.border_r)
+            txt = botton.police.render(botton.text, True, botton.text_color)
+            screen.blit(txt, txt.get_rect(center=botton.rect.center))
+    return niveau

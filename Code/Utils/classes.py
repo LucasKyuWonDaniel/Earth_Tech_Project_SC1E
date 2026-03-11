@@ -2,6 +2,8 @@
 class MapClass:
     def __init__(self, friction, vitesse_max, gravite, acceleration, screen, joueur):
         self.keys = []
+        self.aleatoire = AleatoireClass(1, 100, 2000)
+        self.click = False
         self.screen = screen
         self.vx = 0
         self.vy = 0
@@ -26,9 +28,7 @@ class MapClass:
         self.fire = []
         self.press_e = False
         self.dechets = []
-        self.poubelles = []
         self.dechet_transporte = None
-        self.pollution = 0
         self.timer_apparition = 0
         self.intervalle_apparition = 120
         self.types_dechets = []
@@ -46,4 +46,23 @@ class ObjetClass:
         self.visible = True
         self.color = (100, 100, 100)
         self.variable = 0
-        self.type_dechet = ""
+
+# Classe pour gerer l'aleatoire
+class AleatoireClass:
+    def __init__(self, s, min, max):
+        self.nb_s = s
+        self.min = min
+        self.max = max
+        self.time = 0
+
+# Classe pour cree les button
+class ButtonClass:
+    def __init__(self, rect, text, police , action, hover=(100, 100, 100), border_r = 8, color=(70, 130, 180), text_color=(255, 255, 255)):
+        self.rect = rect
+        self.text = text
+        self.police  = police
+        self.color = color
+        self.hover = hover
+        self.text_color = text_color
+        self.action = action
+        self.border_r = border_r

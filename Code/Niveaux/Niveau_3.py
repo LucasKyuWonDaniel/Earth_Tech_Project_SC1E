@@ -5,18 +5,6 @@ from Code.Utils.classes import ObjetClass
 
 def element_lvl_3():
     element = {
-        "platform": [
-            [0, 70, 130, 1],
-            [20, 55, 15, 1],
-            [50, 45, 15, 1],
-            [80, 35, 15, 1],
-            [110, 25, 15, 1],
-        ],
-        "wall": [
-            [0, 0, 1, 72],
-            [129, 0, 1, 72],
-            [-1, 0, 1, 72]
-        ],
         "poubelle_plastique": [
             [10, 65, 4, 5]
         ],
@@ -32,9 +20,7 @@ def element_lvl_3():
 def init_lvl_3(map):
     map.water = 0
     map.score = 0
-    map.score_max = 20
     map.temps_restant = 60 * 60
-    map.pollution = 0
     map.dechets = []
     map.dechet_transporte = None
     map.timer_apparition = 0

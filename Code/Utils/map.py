@@ -85,6 +85,7 @@ def mouvement(map):
 # fonction qui permet de faire tourner la map
 def run_map(map):
     map.keys = pygame.key.get_pressed()
+    map.aleatoire.time += 1
 
     mouvement(map)
     interaction(map)
@@ -108,15 +109,26 @@ def run_map(map):
         generation_fire(map)
         gestion_score_bare(map, (map.score * 100)/15)
     elif map.niveau == 3:
-        etat = update_lvl_3(map)
-        gestion_score_bare(map, (map.score * 100) / map.score_max)
+        #etat = update_lvl_3(map)
+        gestion_score_bare(map, (map.score * 100) / 10)
         
 
 
 
 
 # fonction pour initialiser la map
-def init_map(niveau, element, screen):
+def init_map(niveau, screen):
+    if niveau == 1:
+        element_lvl = element_lvl_1()
+    elif niveau == 2:
+        element_lvl = {}
+    elif niveau == 3:
+        element_lvl = element_lvl_3()
+    else:
+        element_lvl = element_lvl_1()
+
+    element = element_map_general() | element_lvl
+
     joueur = ObjetClass(pygame.Rect(160, 380, 50, 50), "player")
     map = MapClass(0.7, 7, 0.8, 0.8, screen, joueur)
     map.vx = 0
